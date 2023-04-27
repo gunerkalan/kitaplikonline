@@ -1,10 +1,12 @@
 package com.kitaplik.libraryservice.controller;
 
+import brave.Response;
 import com.kitaplik.libraryservice.dto.AddBookRequest;
 import com.kitaplik.libraryservice.dto.LibraryDto;
 import com.kitaplik.libraryservice.service.LibraryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,8 @@ public class LibraryController {
     Logger logger = LoggerFactory.getLogger(LibraryController.class);
     private final LibraryService libraryService;
     private final Environment environment;
+    @Value("${library-service.book.count}")
+    private String count;
 
     public LibraryController(LibraryService libraryService, Environment environment) {
         this.libraryService = libraryService;
@@ -37,5 +41,10 @@ public class LibraryController {
     public ResponseEntity<Void> addBookToLibrary(@RequestBody AddBookRequest request) {
         libraryService.addBookToLibrary(request);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<String> getCount(){
+        return ResponseEntity.ok("Library count is" +count);
     }
 }
